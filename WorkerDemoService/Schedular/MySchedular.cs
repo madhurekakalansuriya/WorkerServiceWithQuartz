@@ -9,19 +9,20 @@ using System.Threading.Tasks;
 using WorkerDemoService.Models;
 
 namespace WorkerDemoService.Schedular
-{
+{// start and stop task
     class MySchedular : IHostedService
     {
         public IScheduler Scheduler { get; set; }
         private readonly IJobFactory jobFactory;
-        private readonly List<JobMetadata> jobMetadatas;
+        //private readonly List<JobMetadata> jobMetadatas;
+        private readonly JobMetadata jobMetadata;
         private readonly ISchedulerFactory schedulerFactory;
 
-        public MySchedular(ISchedulerFactory schedulerFactory,List<JobMetadata> jobMetadatas,IJobFactory jobFactory)
+        public MySchedular(ISchedulerFactory schedulerFactory,JobMetadata jobMetadata,IJobFactory jobFactory)
         {
             this.jobFactory = jobFactory;
             this.schedulerFactory = schedulerFactory;
-            this.jobMetadatas = jobMetadatas;
+            this.jobMetadata = jobMetadata;
         }
         public async Task StartAsync(CancellationToken cancellationToken)
         {
@@ -29,17 +30,26 @@ namespace WorkerDemoService.Schedular
             Scheduler = await schedulerFactory.GetScheduler();
             Scheduler.JobFactory = jobFactory;
 
-            //Suporrt for Multiple Jobs
-            jobMetadatas?.ForEach(jobMetadata =>
-            {
-                //Create Job
-                IJobDetail jobDetail = CreateJob(jobMetadata);
-                //Create trigger
-                ITrigger trigger = CreateTrigger(jobMetadata);
-                //Schedule Job
-                Scheduler.ScheduleJob(jobDetail, trigger, cancellationToken).GetAwaiter();
-                //Start The Schedular
-            });
+            ////Suporrt for Multiple Jobs
+            //jobMetadatas?.ForEach(jobMetadata =>
+            //{
+            //    //Create Job
+            //    IJobDetail jobDetail = CreateJob(jobMetadata);
+            //    //Create trigger
+            //    ITrigger trigger = CreateTrigger(jobMetadata);
+            //    //Schedule Job
+            //    Scheduler.ScheduleJob(jobDetail, trigger, cancellationToken).GetAwaiter();
+            //    //Start The Schedular
+            //});
+
+
+            //Create Job
+            IJobDetail jobDetail = CreateJob(jobMetadata);
+            //Create trigger
+            ITrigger trigger = CreateTrigger(jobMetadata);
+            //Schedule Job
+            Scheduler.ScheduleJob(jobDetail, trigger, cancellationToken).GetAwaiter();
+            //Start The Schedular
             await Scheduler.Start(cancellationToken);
         }
 

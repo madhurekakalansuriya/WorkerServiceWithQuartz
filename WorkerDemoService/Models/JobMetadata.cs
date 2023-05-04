@@ -4,6 +4,7 @@ using System.Text;
 
 namespace WorkerDemoService.Models
 {
+    //contain job meta data
     public class JobMetadata
     {
         public Guid JobId { get; set; }

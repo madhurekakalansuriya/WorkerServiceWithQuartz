@@ -13,8 +13,11 @@ namespace WorkerDemoService.JobFactory
         {
             service = serviceProvider;
         }
+
+        //create a new job
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
+            //details create a s bundle
             var jobDetail = bundle.JobDetail;
             return (IJob)service.GetService(jobDetail.JobType);
         }

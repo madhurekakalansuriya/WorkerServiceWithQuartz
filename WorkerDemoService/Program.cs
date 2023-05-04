@@ -26,19 +26,25 @@ namespace WorkerDemoService
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddSingleton<IJobFactory, MyJobFactory>();
+                    //already implemented in quatz for shedule factory
                     services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();                    
 
                     #region Adding JobType
                     services.AddSingleton<NotificationJob>();
-                    services.AddSingleton<LoggerJob>();
+                    //services.AddSingleton<LoggerJob>();
                     #endregion
 
                     #region Adding Jobs 
-                    List<JobMetadata> jobMetadatas = new List<JobMetadata>();
-                    jobMetadatas.Add(new JobMetadata(Guid.NewGuid(), typeof(NotificationJob), "Notify Job", "0/10 * * * * ?"));
-                    jobMetadatas.Add(new JobMetadata(Guid.NewGuid(), typeof(LoggerJob), "Log Job", "0/5 * * * * ?"));
-                    
-                    services.AddSingleton(jobMetadatas);
+                    // adding single meta data
+                    var jobMetadata = new JobMetadata(Guid.NewGuid(), typeof(NotificationJob), "Notify Job", "0/20 * * * * ?");
+                    services.AddSingleton(jobMetadata);
+
+                    // adding multiple meta data
+                    //List<JobMetadata> jobMetadatas = new List<JobMetadata>();
+                    // jobMetadatas.Add(new JobMetadata(Guid.NewGuid(), typeof(NotificationJob), "Notify Job", "0/20 * * * * ?"));
+                    //jobMetadatas.Add(new JobMetadata(Guid.NewGuid(), typeof(LoggerJob), "Log Job", "0/20 * * * * ?"));
+
+                    // services.AddSingleton(jobMetadatas);
                     #endregion
 
                     services.AddHostedService<MySchedular>();
